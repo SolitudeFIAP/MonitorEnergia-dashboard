@@ -1,6 +1,8 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthStrategy } from '@nebular/auth';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NbAuthModule, NbPasswordAuthStrategy, NbAuthSimpleToken } from '@nebular/auth';
+import { AuthInterceptor } from './mock/auth-interceptor.service';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 
@@ -106,9 +108,34 @@ export const NB_CORE_PROVIDERS = [
   ...NbAuthModule.forRoot({
 
     strategies: [
-      NbDummyAuthStrategy.setup({
+      NbPasswordAuthStrategy.setup({
         name: 'email',
-        delay: 3000,
+        token: {
+          class: NbAuthSimpleToken,
+          key: 'data.token', // where to find the token in the response
+        },
+        login: {
+          endpoint: '/auth/login',
+          method: 'post',
+          requireValidToken: false,
+        },
+        register: {
+          endpoint: '/auth/register',
+          method: 'post',
+          requireValidToken: false,
+        },
+        logout: {
+          endpoint: '/auth/logout',
+          method: 'post',
+        },
+        requestPass: {
+          endpoint: '/auth/request-pass',
+          method: 'post',
+        },
+        resetPass: {
+          endpoint: '/auth/reset-pass',
+          method: 'post',
+        },
       }),
     ],
     forms: {
@@ -137,6 +164,11 @@ export const NB_CORE_PROVIDERS = [
 
   {
     provide: NbRoleProvider, useClass: NbSimpleRoleProvider,
+  },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
   },
   AnalyticsService,
   LayoutService,
