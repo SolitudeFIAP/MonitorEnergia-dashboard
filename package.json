@@ -4,10 +4,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourorganization/monitor-energia.git"
+    "url": "git+https://github.com/SolitudeFIAP/MonitorEnergia-dashboard.git"
   },
   "bugs": {
-    "url": "https://github.com/yourorganization/monitor-energia/issues"
+    "url": "https://github.com/SolitudeFIAP/MonitorEnergia-dashboard/issues"
   },
   "scripts": {
     "ng": "ng",
